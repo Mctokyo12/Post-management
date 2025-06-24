@@ -1,25 +1,13 @@
 const express = require("express");
-const { setPosts, getPosts } = require("../Controllers/post.controller");
+const { setPosts, getPosts, editPost, deletePost, likePost, dislikePost } = require("../Controllers/post.controller");
 const router = express.Router();
+const userAuth = require("../Middlewares/auth")
 
 router.get("/",getPosts);
-
-router.post("/",setPosts);
-
-router.put("/:id" , (req ,res)=>{
-    res.json({MessageId: req.params.id});
-});
-
-router.delete("/:id" , (req ,res)=>{
-    res.json({Message: "Post supprime et  Id: "+req.params.id});
-});
-
-router.patch("/like/:id" , (req,res)=>{
-    res.json({Message: "Post Like  et id: "+ req.params.id});
-});
-
-router.patch("/dislike/:id", (req , res)=>{
-    res.json({Message: "Post dislike et id "+ req.params.id});
-});
+router.post("/", userAuth , setPosts);
+router.put("/:id" , userAuth, editPost);
+router.delete("/:id" , userAuth, deletePost);
+router.patch("/like/:id" , userAuth, likePost);
+router.patch("/dislike/:id",userAuth, dislikePost);
 
 module.exports = router;

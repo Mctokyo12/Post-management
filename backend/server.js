@@ -14,6 +14,7 @@ app.use(express.urlencoded({extended: false}));
 
 // les router
 app.use("/post" , require("./Router/post.route"));
+app.use("/" , require("./Router/user.route"));
 
 // lancer le serveur
 app.listen(port , ()=>{console.log("le server a demarrer au port "+ port)});

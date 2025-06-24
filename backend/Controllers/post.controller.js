@@ -33,6 +33,7 @@ module.exports.editPost = async (req , res) => {
     );
 
     res.status(200).json({updatePost});
+    
 }
 
 module.exports.deletePost = async (req ,res) => {
@@ -41,7 +42,7 @@ module.exports.deletePost = async (req ,res) => {
         res.status(400).json({message: "ce post n'existe pas"});
     }
 
-    await post.remove();
+    await post.deleteOne();
 
     res.status(200).json("message supprime "+ req.params.id);
 }
