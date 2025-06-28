@@ -1,13 +1,13 @@
 const express = require("express");
 const { setPosts, getPosts, editPost, deletePost, likePost, dislikePost } = require("../Controllers/post.controller");
 const router = express.Router();
-const userAuth = require("../Middlewares/auth")
+const { authUser }  = require("../Middlewares/auth");
 
-router.get("/",getPosts);
-router.post("/", userAuth , setPosts);
-router.put("/:id" , userAuth, editPost);
-router.delete("/:id" , userAuth, deletePost);
-router.patch("/like/:id" , userAuth, likePost);
-router.patch("/dislike/:id",userAuth, dislikePost);
+router.get("/", authUser,getPosts);
+router.post("/", authUser , setPosts);
+router.put("/:id" , authUser, editPost);
+router.delete("/:id" , authUser, deletePost);
+router.patch("/like/:id" , authUser, likePost);
+router.patch("/dislike/:id",authUser, dislikePost);
 
 module.exports = router;

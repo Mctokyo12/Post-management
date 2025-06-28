@@ -6,11 +6,11 @@ module.exports.signup = async (req , res) => {
 
     try {
         
-        const {name , password , email } = req.body;
+        const {username , password , email } = req.body;
         const passwordCrypt = await bcrypt.hash(password , 12);
 
         const user = await UserModel.create({
-            name: name,
+            name: username,
             email:email,
             password: passwordCrypt
         });
@@ -26,7 +26,6 @@ module.exports.signup = async (req , res) => {
 module.exports.login = async (req , res) => {
     try {
         const {name , password , email } = req.body;
-        const passwordCrypt = await bcrypt.hash(password , 12);
         const user  = await UserModel.findOne({email: email});
         if(!user){
             res.status(400).json({message: "The email address you entered is not connected to an account"})
@@ -44,7 +43,9 @@ module.exports.login = async (req , res) => {
                 {userID: user._id},
                 "RANDOM_TOKEN_SECRET",
                 {expiresIn: '24'}
-            )
+            ),
+            name: user.name,
+            email: user.email
         });
 
     } catch (error) {

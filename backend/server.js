@@ -1,9 +1,12 @@
 const express = require("express");
 const connectBD = require("./Config/db");
+const cors = require('cors')
 const doenv = require("dotenv").config();
 const app = express();
 
 const port = 5000;
+
+app.use(cors());
 
 // connexion a la bd
 connectBD();
