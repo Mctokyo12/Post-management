@@ -3,11 +3,11 @@ const { setPosts, getPosts, editPost, deletePost, likePost, dislikePost } = requ
 const router = express.Router();
 const { authUser }  = require("../Middlewares/auth");
 
-router.get("/", authUser,getPosts);
-router.post("/", authUser , setPosts);
-router.put("/:id" , authUser, editPost);
-router.delete("/:id" , authUser, deletePost);
-router.patch("/like/:id" , authUser, likePost);
-router.patch("/dislike/:id",authUser, dislikePost);
+router.get("/",getPosts);
+router.post("/", setPosts);
+router.put("/:id" ,  editPost);
+router.delete("/:id" ,  deletePost);
+router.patch("/like/:id" ,  likePost);
+router.patch("/dislike/:id", dislikePost);
 
 module.exports = router;

@@ -55,3 +55,7 @@ form button[type="submit"]{
 .hidden{
     display: none;
 }
+
+.post-action > span{
+    cursor: pointer;
+}

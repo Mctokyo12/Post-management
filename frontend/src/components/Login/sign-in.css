@@ -6,6 +6,15 @@ body {
 .form-signin {
   max-width: 450px;
   padding: 1rem;
+
+} 
+
+.form-signin form{
+  display: flex;
+  flex-direction: column;
+}
+.form-signin form div{
+  width: 100%;
 }
 
 .form-signin .form-floating:focus-within {

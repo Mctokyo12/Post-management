@@ -1,36 +1,28 @@
-import axios from 'axios';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addPosts, getPosts } from '../../actions/post.action';
 
 
-const PostForm = ({user,setpostUpdate}) => {
+const PostForm = ({user}) => {
     const [content , setcontent] = useState("");
-    const handleSubmit = async ()=>{
-        try {
-            const {data} = await axios.post(`http://localhost:5000/post` , 
-                {
-                    message: content,
-                    auth: user.auth
-                },
-                {
-                    headers:{
-                        Authorization: `Bearer ${user.token}`,
-                    }
-                }
-           )
-           console.log(data);
-           setpostUpdate(true);
-           
-        } catch (error) {
-            console.log(error);
-            
+    const dispatch = useDispatch();
+    const handleSubmit = async (e)=>{
+        e.preventDefault();
+        const postData = {
+            message: content,
+            auth: user.name
         }
+        await dispatch(addPosts(postData))
+        dispatch(getPosts())
+        e.target.reset();
+        
     }
-
+    
 
     return (
-        <form action="" onSubmit={handleSubmit} className=''>
-            <textarea class="" cols={3} placeholder='Quoi de neuf' onChange={(e)=>{setcontent(e.target.value)}}></textarea>
-            <button type="submit" class="btn btn-primary">Submit</button>
+        <form  action="" onSubmit={handleSubmit} className=''>
+            <textarea className="" cols={3} placeholder='Quoi de neuf' onChange={(e)=>{setcontent(e.target.value)}}></textarea>
+            <button type="submit" className="btn btn-primary">Submit</button>
         </form>
     );
 };

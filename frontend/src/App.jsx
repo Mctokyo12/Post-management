@@ -1,47 +1,31 @@
 
-import {Routes , Route } from 'react-router-dom'
+import {Routes , Route, Outlet , Navigate } from 'react-router-dom'
 import Login from './pages/Login'
 
 import Navbar from './components/Navbar'
 import Register from './pages/Register'
 import Home from './pages/home'
-import { useState ,useEffect } from 'react'
-import axios from 'axios'
+// import { useState ,useEffect } from 'react'
+// import axios from 'axios'
 
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { useSelector } from 'react-redux'
 
 function App() {
 
-
-  const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
-  const [posts , setposts] = useState();
-  const [postUpdate , setpostUpdate] = useState(false);
-
-  useEffect(()=>{
-    getPosts();
-  } , postUpdate)
-  
-  const getPosts =  async ()=>{
-    try {
-      const {data}  = await axios.get(
-        'http://localhost:5000/post' , 
-        {
-          headers:{
-            Authorization: `Bearer ${user.token}`,
-          }
-        }
-      )
-      setposts(data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
+  const user = useSelector((state)=>state.userReducer);
+ 
   return (
     <>
       <Routes>
+        <Route  element={user ? <Outlet/> : <Login/>} >
+          <Route path='/' element={<Home  />}/>
+        </Route>
 
-        {user ? <Route path='/' element={<Home user={user} posts={posts} setpostUpdate={setpostUpdate} />}></Route> : <Route path='/login' element={<Login/>}/> } 
+        <Route element={user ? <Navigate to="/" /> : <Outlet/> }>
+          <Route path='/login' element={<Login/>}/>
+        </Route> 
+       
         <Route path='/signup' element={<Register/>} />
         
       </Routes>

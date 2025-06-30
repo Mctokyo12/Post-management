@@ -1,91 +1,50 @@
-import axios from 'axios';
+// import axios from 'axios';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { deletePosts, dislikePosts, editPosts, likePosts } from '../../actions/post.action';
+import { isEmpty } from '../utils';
 
-const Post = ({post,user,setpostUpdate }) => {
-
+const Post = ({post,user}) => {
+     
     const [showEdit , setshowEdit] = useState(false);
     const [contentEdit , setcontentEdit]= useState("");
-    const [like , setlike] = useState(false);
+    // const [like , setlike] = useState(false);
+    const dispatch =  useDispatch();
 
-    const handleSubmit = async ()=>{
-        try {
-            const {data}  = await axios.put(
-                `http://localhost:5000/post/${post._id}`,
-                {
-                    message: contentEdit
-                },
-                {
-                    headers:{
-                        Authorization: `Bearer ${user.token}`
-                    }
-                }   
-            )
-            setpostUpdate(true);
-            console.log(data);
-        } catch (error) {
-            console.log(error)
+    const handleSubmit = async (e)=>{
+        e.preventDefault();
+        const postData = {
+            message: contentEdit,
+            id: post._id
         }
-    }
-
-    const deletePost = async()=>{
-        try {
-            const {data} = axios.delete(
-                `http://localhost:5000/post/${user._id}`,
-                {
-                    headers:{
-                        Authorization: `Bearer ${user.token}`
-                    }
-                }
-            )
-            console.log(data);
-            setpostUpdate(true);
-            
-        } catch (error) {
-            console.log(error)
-        }
+        dispatch(editPosts(postData))
+        setshowEdit(false)       
     }
 
     const likePost = ()=>{
-
-        if(!like){
-            const {data} = axios.patch(
-                `http://localhost:5000/post/like/${post._id}`,
-                {
-                    userId: user.name
-                },
-                {
-                    headers:{
-                        Authorization: `Bearer ${user.token}`
-                    }
-                }
-            )
-
-
-            console.log(data);
-            setpostUpdate(true);
-            setlike(true);
-
+        if(!post.likes.includes(user.name)){
+            const data = {
+                userId: user.name,
+                id: post._id
+            }
+            dispatch(likePosts(data))
         }else{
-            const {data} = axios.patch(
-                `http://localhost:5000/post/dislike/${post._id}`,
-                {
-                    userId: user.name
-                },
-                {
-                    headers:{
-                        Authorization: `Bearer ${user.token}`
-                    }
-                }
-            )
+            const data = {
+                userId: user.name,
+                id: post._id
+            }
+            dispatch(dislikePosts(data));
+        }    
+            
 
-            console.log(data);
-            setpostUpdate(true);
-            setlike(false);
-        }
+        
+        
+        
+        
     }
 
     return (
-        <div className='post'>
+        <div className='post mt-3'>
             <div className='post-header post-flex'>
                 <h3>{post.auth}</h3>
                 <span>publier le  12 janvier 2025</span>
@@ -93,16 +52,18 @@ const Post = ({post,user,setpostUpdate }) => {
             <div className='post-container'>
                 <p className={!showEdit ? " ": "hidden"} >{post.message}</p> 
                 <form action="" onSubmit={handleSubmit} className={showEdit? "":"hidden"}>
-                    <textarea cols={3} placeholder='Quoi de neuf ' onChange={(e)=>{setcontentEdit(e.target.value)}}></textarea>
+                    <textarea cols={3} placeholder='Quoi de neuf ' defaultValue={post.message} onChange={(e)=>{setcontentEdit(e.target.value)}}> 
+                       
+                    </textarea>
                     <button type="submit" className="btn btn-primary">Valide l'edition</button>
                 </form>    
             </div>
             <div className='post-action post-flex'>
-                <span onClick={likePost}>like {post.likes.length}</span>
+                <span onClick={likePost}>like {isEmpty(post.likes) ? 0 : post.likes.length}</span>
                 {post.auth == user.name && 
                     <div>
-                        <span className='btn btn-primary' onClick={()=>{setshowEdit(true)}}>edit</span>
-                        <span className='btn btn-danger' onClick={deletePost}>delete</span>
+                        <span className='btn btn-primary' onClick={()=>{setshowEdit(!showEdit)}}>edit</span>
+                        <span className='btn btn-danger' onClick={()=>{dispatch(deletePosts(post._id))}}>delete</span>
                     </div>
                 }
             </div>

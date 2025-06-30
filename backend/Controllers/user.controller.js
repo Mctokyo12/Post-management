@@ -41,7 +41,7 @@ module.exports.login = async (req , res) => {
             userId: user._id,
             token: jwt.sign(
                 {userID: user._id},
-                "RANDOM_TOKEN_SECRET",
+                process.env.TOKEN_SECRET,
                 {expiresIn: '24'}
             ),
             name: user.name,

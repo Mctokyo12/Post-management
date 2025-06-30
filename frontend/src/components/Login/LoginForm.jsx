@@ -2,11 +2,11 @@ import React, { useState }  from 'react';
 import './sign-in.css';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Navigate  } from 'react-router-dom';
 const LoginForm = () => {
     const {register ,handleSubmit , formState: {errors},} =  useForm();
     const [loading , setloading] = useState(false);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const onSubmit =  async (Data) => {
         setloading(true);
         try {
@@ -15,13 +15,14 @@ const LoginForm = () => {
                 password: Data.password
             });  
             localStorage.setItem('user' , JSON.stringify(data));  
-            navigate("/");
+            <Navigate to="/" />
             
         } catch (error) {
             console.log(error)
             setloading(false)
         }
     }
+    
     const regexEmail = /^[a-z0-9!*?#$/_-]+@[a-z0-9!*?#$/_-]+\.[a-z0-9]{2,4}$/
  
 
